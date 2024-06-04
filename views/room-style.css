@@ -1,0 +1,9 @@
+#messageInput {
+    width: calc(100% - 100px);
+    border-radius: 5px;
+}
+
+#sendButton {
+    width: 100px;
+    border-radius: 5px;
+}

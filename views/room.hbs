@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/room-style.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ADD8E6; /* Light blue background for the whole page */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main Container Styles */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #87CEEB; /* Slightly darker blue for the container */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff; /* White color for better readability on blue background */
+        }
+
+        /* Messages Container Styles */
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #d3d4d5; /* Lighter shade of blue for contrast within the container */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Chat Bubble Styles */
+        .message {
+            width: fit-content;
+            max-width: 80%;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 12px;
+            position: relative;
+            line-height: 1.4;
+            font-size: 16px;
+            color: black; /* Ensuring text color is readable */
+        }
+
+        .my-message {
+            background-color: #ADD8E6; /* Light blue for own messages */
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .other-message {
+            background-color: #FFFFFF; /* White for messages from others */
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Text Input Styles */
+        input[type="text"] {
+            width: calc(100% - 80px); /* Adjust width to make room for send button */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* Send Button Styles */
+        #sendButton {
+            width: 80px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* Home Button Styles */
+        #homeButton {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #homeButton:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Chatroom: {{roomName}}</h1>
+
+        <div id="messages"></div>
+
+        <input type="text" id="messageInput" placeholder="Type your message">
+        <button id="sendButton">Send</button>
+
+        <a href="/" id="homeButton">Home</a>
+    </div>
+
+    <script>
+        const roomName = '{{roomName}}';
+        let nickname = '';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchMessages();
+
+            nickname = prompt('Please enter your nickname') || 'Anonymous';
+
+            setInterval(fetchMessages, 3000);
+
+            document.getElementById('sendButton').addEventListener('click', postMessage);
+        });
+
+        async function fetchMessages() {
+            try {
+                const response = await fetch(`/${roomName}/messages`);
+                const messages = await response.json();
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.innerHTML = messages.map(msg => `
+                    <div class="${msg.nickname === nickname ? 'message my-message' : 'message other-message'}">
+                        <strong>${msg.nickname}</strong>: ${msg.text} <em>(${new Date(msg.createdAt).toLocaleTimeString()})</em>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        async function postMessage() {
+            const text = document.getElementById('messageInput').value.trim();
+            if (text) {
+                try {
+                    await fetch(`/${roomName}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ nickname, text })
+                    });
+                    document.getElementById('messageInput').value = '';
+                    fetchMessages();
+                } catch (error) {
+                    console.error('Error posting message:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
