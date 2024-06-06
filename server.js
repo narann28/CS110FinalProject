@@ -27,5 +27,7 @@ app.post('/create', roomHandler.createRoom);
 app.get('/:roomName', roomHandler.getRoom);
 app.get('/:roomName/messages', roomHandler.getMessages);
 app.post('/:roomName/messages', roomHandler.postMessage);
+app.put('/messages/:messageId', roomHandler.editMessage);
+app.delete('/messages/:messageId', roomHandler.deleteMessage);
 
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
