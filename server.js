@@ -5,13 +5,14 @@ const cookieParser = require('cookie-parser');
 const hbs = require('express-handlebars');
 const path = require('path');
 
+const User = require('./models/User');
 const Chatroom = require('./models/Chatroom');
 const authHandler = require('./controllers/auth');
 const homeHandler = require('./controllers/home');
 const roomHandler = require('./controllers/room');
 
 const app = express();
-const port = 8080;  // Corrected to unique port if you changed it intentionally
+const port = 8080;  
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://nnath003:1234@chat.yinbwpp.mongodb.net/', {
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session Configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default_secret', // Use an environment variable for production
+  secret: process.env.SESSION_SECRET || 'default_secret', 
   resave: false,
   saveUninitialized: true,
   cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true }
@@ -56,7 +57,30 @@ app.post('/signup', authHandler.registerUser);
 app.post('/login', authHandler.loginUser);
 
 // Home page route, accessible only after login
-app.get('/home', requireAuth, (req, res) => res.render('home')); // Make sure 'home.hbs' exists
+app.get('/home', homeHandler.getHome);
+
+// Route to delete a chatroom
+app.delete('/delete/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  try {
+      await Chatroom.deleteOne({ roomId });
+      res.sendStatus(200); 
+  } catch (error) {
+      console.error("Error:", error);
+      res.sendStatus(500); 
+  }
+});
+
+// Route to delete all users
+app.delete('/delete-all-users', async (req, res) => {
+  try {
+    await User.deleteMany({});
+    res.sendStatus(200).send('All users deleted successfully');
+  } catch (error) {
+    console.error("Error:", error);
+    res.sendStatus(500);
+  }
+});
 
 // Route to leave a chatroom
 app.get('/leave-chatroom', requireAuth, (req, res) => {

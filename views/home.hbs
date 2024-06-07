@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/css/home-style.css">
+    <title>{{title}}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,6 +13,7 @@
             align-items: center;
             margin: 0;
             padding: 0;
+            background-color: rgb(150, 206, 223);
         }
 
         .title {
@@ -26,43 +26,107 @@
         h2 {
             text-align: center;
             margin-top: 20px;
+            color: black;
         }
 
         h1 {
             text-align: center;
             margin-top: 20px;
+            color: black;
         }
 
-        .chatrooms-list {
-            width: 100%;
-            max-width: 600px;
+        .create-chatroom-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .chatroom-list {
+            list-style: none;
             padding: 0;
         }
 
-        .chatrooms-list .chatroom-container {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px 0;
+        .chatroom-box {
+            width: 100%; 
+            height: auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            padding: 20px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 14;
+        }
+
+        .chatroom-info {
+            flex: 1; 
+        }
+
+        .chatroom-box p {
+            margin: 0;
+        }
+
+        .button-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
-
-        .chatroom-container p {
-            margin: 0;
-            flex: 1;
+        .create-room-btn
+        {
+            background-color: green;
         }
-
-        a {
+        .join-button,
+        .delete-button {
+            display: inline-block;
+            background-color: #007bff; 
+            color: #fff; 
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
             text-decoration: none;
-            color: #007bff;
-            margin-left: 10px;
+            cursor: pointer;
+            margin-right: 10px; 
+            width: 140px;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .delete-button {
+            background-color: #dc3545; 
+        }
+
+        .join-button:hover,
+        .delete-button:hover {
+            background-color: #0056b3;
+        }
+
+        .signout-btn {
+            background-color: red; 
+            color: #fff; 
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 40px;
+        }
+
+        .welcome-user {
+            color: black;
+            padding: 8px 16px;
+            border: 1px solid black;
+            border-radius: 4px;
+            position: fixed;
+            top: 0;
+            left: 20px;
+            font-size: 16px;
+            background-color: rgb(223, 221, 221); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .signout-btn:hover {
+            background-color: #0056b3; 
         }
 
         form {
@@ -70,12 +134,14 @@
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
+            margin-bottom: 30px;
         }
 
         form label,
         form input,
         form button {
             margin: 5px 0;
+            padding: 5px 10px;
         }
 
         form input {
@@ -83,33 +149,68 @@
             width: 200px;
         }
 
-        form button {
-            padding: 5px 10px;
-        }
     </style>
 </head>
 <body>
-    <h1 class="title">Chat-Corner App</h1>
+    <h1 class="title">Chatroom Application</h1>
+
+    <h3 class="welcome-user">{{username}}<br>{{name}}<br>{{email}} </h3>
 
     <form action="/sign-out" method="get" style="margin-bottom: 20px;">
-        <button type="submit">Sign Out</button>
+        <button type="submit" class ="signout-btn">Sign Out</button>
     </form>
 
+    <div class="create-chatroom-box">
+        <h2>Create a New Chatroom:</h2>
+            <form action="/create" method="POST">
+                <label for="roomName">Room Name:</label>
+                <input type="text" id="roomName" name="roomName" required>
+                <button type="submit" class="create-room-btn">Create Chatroom</button>
+            </form>
+    </div>
+
     <h2>Existing Chat-Corners:</h2>
-    <ul class="chatrooms-list">
+    <ul class="chatroom-list">
         {{#each chatrooms}}
-        <li class="chatroom-container">
-            <p>Room Name: {{name}}</p>
-            <a href="/{{roomId}}">Join Chatroom</a>
-        </li>
+            <li class="chatroom-box">
+                <div class="chatroom-info">
+                    <p><strong>{{name}}</strong></p>
+                    <p>Room ID: {{roomId}}</p>
+                </div>
+                <div class="button-container">
+                    <a href="/{{roomId}}">
+                        <button class="join-button" >Join Chatroom</button>
+                    </a>
+                    <button class="delete-button" data-roomid="{{roomId}}">Delete Chatroom</button>
+                </div>
+            </li>
         {{/each}}
     </ul>
 
-    <h2>Create a New Chatroom:</h2>
-    <form action="/create" method="POST">
-        <label for="roomName">Room Name:</label>
-        <input type="text" id="roomName" name="roomName" required>
-        <button type="submit">Create Chatroom</button>
-    </form>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-button");
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async () => {
+            console.log("")
+            const roomId = button.dataset.roomid;
+            try {
+                const response = await fetch(`/delete/${roomId}`, {
+                    method: "DELETE"
+                });
+                if (response.ok) {
+                    alert("Chatroom deleted successfully");
+                    window.location.reload(); // refresh the page
+                } else {
+                    console.error("Failed to delete chatroom");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+</script>
 </body>
+
 </html>

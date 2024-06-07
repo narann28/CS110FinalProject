@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
 const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { name, username, email, password } = req.body;
 
   // Check if the user already exists
   const userExists = await User.findOne({ $or: [{ username }, { email }] });
@@ -11,7 +11,7 @@ const registerUser = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({ username, email, password: hashedPassword });
+  const newUser = new User({ name, username, email, password: hashedPassword });
 
   try {
     await newUser.save();
@@ -26,16 +26,20 @@ const loginUser = async (req, res) => {
   const user = await User.findOne({ username });
 
   if (!user) {
-    return res.status(404).send('User not found'); // Not found status code
+    return res.status(404).send('User not found');
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (passwordMatch) {
-    req.session.userId = user._id; // Set the user's session ID to maintain their login state
-    res.redirect('/home'); // Redirect to the home page after successful login
+    req.session.userId = user._id;
+    req.session.name = user.name; 
+    req.session.email = user.email; 
+    req.session.username = user.username;
+    res.redirect('/home');
   } else {
-    res.status(401).send('Credentials do not match'); // Unauthorized status code
+    res.status(401).send('Credentials do not match');
   }
 };
+
 
 module.exports = { registerUser, loginUser };

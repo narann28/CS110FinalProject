@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <link rel="stylesheet" href="/css/room-style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,7 +123,7 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-
+        
         #sendButton {
             width: 80px;
             padding: 8px;
@@ -132,6 +131,24 @@
             border-radius: 4px;
             background-color: #007bff;
             color: #fff;
+            cursor: pointer;
+        }
+
+        .signout-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .home-btn {
+            background-color: #007bff;
+            color: green;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
         }
 
@@ -143,7 +160,7 @@
             display: block;
             text-align: center;
             margin-top: 20px;
-            color: #007bff;
+            color: white;
             text-decoration: none;
         }
 
@@ -153,9 +170,6 @@
     </style>
 </head>
 <body>
-    <form action="/sign-out" method="get">
-        <button type="submit">Sign Out</button>
-    </form>
     <div class="container">
         <h1>Welcome to Chatroom: {{roomName}}</h1>
 
@@ -165,19 +179,25 @@
         <input type="text" id="messageInput" placeholder="Type your message">
         <button id="sendButton">Send</button>
 
-        <a href="/home" id="homeButton">Home</a>
+        <a href="/home" id="homeButton" class="home-btn">Return to Home</a>
+
+        <form action="/sign-out" method="get">
+        <button type="submit" class="signout-btn">Sign Out</button>
+        </form>
     </div>
 
     <script>
         const roomName = '{{roomName}}';
-        let nickname = '';
+        let nickname = '{{username}}';
 
         document.addEventListener('DOMContentLoaded', async () => {
             await fetchMessages();
 
-            nickname = prompt('Please enter your nickname') || 'Anonymous';
-
             setInterval(fetchMessages, 3000);
+
+            console.log("username is:")
+            console.log(nickname)
+
 
             document.getElementById('sendButton').addEventListener('click', postMessage);
         });
@@ -201,6 +221,7 @@
                         </div>` : ''}
                     </div>
                 `).join('');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }

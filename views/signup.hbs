@@ -4,11 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Ensure the path is correct for your CSS -->
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        margin-top: -50px;
+    }
+
+    .login-container,
+    .signup-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    .login-form,
+    .signup-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group {
+    
+    }
+
+    label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        padding: 10px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .link-button {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .link-button:hover {
+        text-decoration: underline;
+    }
+    </style>
 </head>
 <body>
+    <h1>Sign Up</h1>
     <div class="signup-container">
-        <form action="/signup" method="post" class="signup-form">
+        <form action="/signup" method="post" class="signup-form" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Name" required class="form-control">
+            </div>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" placeholder="Username" required class="form-control">
@@ -25,6 +101,42 @@
             <p>Already have an account? <a href="/login" class="link-button">Log in here</a>.</p>
         </form>
     </div>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (name.trim() === '') {
+                alert('Please enter your name.');
+                return false;
+            }
+
+            if (username.trim() === '') {
+                alert('Please enter a username.');
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    </script>
 </body>
 </html>
 

@@ -6,7 +6,7 @@ const createRoom = async (req, res) => {
   try {
     const { roomName } = req.body;
     const roomId = roomIdGenerator();
-    const newChatroom = new Chatroom({ name: roomName, roomId });
+    const newChatroom = new Chatroom({ name: roomName, roomId});
     await newChatroom.save();
     res.redirect(`/${newChatroom.roomId}`);
   } catch (error) {
@@ -27,11 +27,12 @@ const getMessages = async (req, res) => {
 const getRoom = async (req, res) => {
   try {
     const { roomName } = req.params;
+    const { username } = req.session;
     const chatroom = await Chatroom.findOne({ roomId: roomName });
     if (!chatroom) {
       return res.status(404).send('Chatroom not found');
     }
-    res.render('room', { title: 'Chatroom', roomName: chatroom.roomId });
+    res.render('room', { title: 'Chatroom', roomName: chatroom.roomId , username: username});
   } catch (error) {
     res.status(500).send(error.message);
   }
