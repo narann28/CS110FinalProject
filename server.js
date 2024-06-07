@@ -58,6 +58,12 @@ app.post('/login', authHandler.loginUser);
 // Home page route, accessible only after login
 app.get('/home', requireAuth, (req, res) => res.render('home')); // Make sure 'home.hbs' exists
 
+// Route to leave a chatroom
+app.get('/leave-chatroom', requireAuth, (req, res) => {
+    // Logic to handle user leaving the chatroom could be implemented here
+    res.render('home'); // Redirect to home after leaving the chatroom
+});
+
 // Dynamic routes
 app.post('/create', roomHandler.createRoom);
 app.get('/:roomName', roomHandler.getRoom);
@@ -84,3 +90,4 @@ app.use((err, req, res, next) => {
 
 // Listen on Port
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
+
