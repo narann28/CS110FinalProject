@@ -64,6 +64,14 @@ app.get('/leave-chatroom', requireAuth, (req, res) => {
     res.render('home'); // Redirect to home after leaving the chatroom
 });
 
+// Sign out route
+app.get('/sign-out', (req, res) => {
+  req.session.destroy(() => {
+    res.render('login'); // Redirect to login page after signing out
+  });
+});
+
+
 // Dynamic routes
 app.post('/create', roomHandler.createRoom);
 app.get('/:roomName', roomHandler.getRoom);
