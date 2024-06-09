@@ -95,7 +95,6 @@ app.get('/sign-out', (req, res) => {
   });
 });
 
-
 // Dynamic routes
 app.post('/create', roomHandler.createRoom);
 app.get('/:roomName', roomHandler.getRoom);
@@ -103,6 +102,9 @@ app.get('/:roomName/messages', roomHandler.getMessages);
 app.post('/:roomName/messages', roomHandler.postMessage);
 app.put('/messages/:messageId', roomHandler.editMessage);
 app.delete('/messages/:messageId', roomHandler.deleteMessage);
+
+// Add route for searching messages in a chatroom
+app.get('/:roomName/messages/search', roomHandler.searchMessages);
 
 // Protected Route Example
 app.get('/protected-route', requireAuth, (req, res) => {
@@ -122,4 +124,3 @@ app.use((err, req, res, next) => {
 
 // Listen on Port
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
-
