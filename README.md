@@ -32,7 +32,7 @@ Ensure you have Node.js and npm installed on your system. You can download them 
    npm install mongoose
    npm run start
 
-6. Usage
+6. **Usage**
 Once the application is running, open your browser and navigate to http://localhost:8080/. You will be able to log in, create new chatrooms, and manage your messages.
 
 **Technologies Used**
