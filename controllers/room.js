@@ -6,7 +6,7 @@ const createRoom = async (req, res) => {
   try {
     const { roomName } = req.body;
     const roomId = roomIdGenerator();
-    const newChatroom = new Chatroom({ name: roomName, roomId});
+    const newChatroom = new Chatroom({ name: roomName, roomId });
     await newChatroom.save();
     res.redirect(`/${newChatroom.roomId}`);
   } catch (error) {
@@ -32,7 +32,7 @@ const getRoom = async (req, res) => {
     if (!chatroom) {
       return res.status(404).send('Chatroom not found');
     }
-    res.render('room', { title: 'Chatroom', roomName: chatroom.roomId , username: username});
+    res.render('room', { title: 'Chatroom', roomName: chatroom.roomId, username: username });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -77,4 +77,15 @@ const deleteMessage = async (req, res) => {
   }
 };
 
-module.exports = { createRoom, getRoom, getMessages, postMessage, editMessage, deleteMessage };
+const searchMessages = async (req, res) => {
+  try {
+    const { roomName } = req.params;
+    const { query } = req.query;
+    const messages = await Message.find({ roomId: roomName, text: { $regex: query, $options: 'i' } }).sort({ createdAt: 1 });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+module.exports = { createRoom, getRoom, getMessages, postMessage, editMessage, deleteMessage, searchMessages };
