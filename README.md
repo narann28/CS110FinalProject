@@ -1,9 +1,41 @@
-# lab 7 demo
-Created a chatroom with functionality to look at other chatrooms and create new ones
+# ChatCorner
 
-Commands you need to run:
-1) npm install
-2) npm install mongodb
-3) npm install mongoose
-4) npm run start
+## Description
+
+ChatCorner is a web application that allows users to log in, create new chatrooms, and manage their messages with ease. Users can edit, delete, and search through messages. Our team built the frontend using React.js and Express, while MongoDB powers the backend for storing data.
+
+## Getting Started
+
+Follow these steps to set up and run the application on your local machine.
+
+### Prerequisites
+
+Ensure you have Node.js and npm installed on your system. You can download them from [Node.js](https://nodejs.org/).
+
+### Installation
+
+1. **Create a folder to hold the application:**
+
+   ```sh
+   mkdir ChatCorner
+   cd ChatCorner
+
+2. **Clone the repository**
+   git clone https://github.com/narann28/CS110FinalProject.git
+   cd CS110FinalProject
+
+3. **Install dependencies and start application**
+   npm install
+   npm install mongodb
+   npm install mongoose
+   npm run start
+
+4. Usage
+Once the application is running, open your browser and navigate to http://localhost:3000. You will be able to log in, create new chatrooms, and manage your messages.
+
+**Technologies Used**
+Frontend: React.js, Express
+Backend: MongoDB, Mongoose
+
+
 
