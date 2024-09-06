@@ -21,6 +21,11 @@ Chatroom:
 
 ![image](https://github.com/narann28/CS110FinalProject/assets/83481452/1b49b033-29b3-43f6-ba24-3feafd465f00)
 
+- Developed a real-time chatroom application with user authentication and authorization using Node.js and MongoDB.
+- Designed and implemented user profiles with features for updating personal information, viewing other users' profiles, and validating/sanitizing inputs.
+- Enabled message management functionalities including editing, deleting, and searching messages within chat rooms.
+- Styled the application using CSS to ensure a responsive and user-friendly interface.
+
 ## Getting Started
 
 Follow these steps to set up and run the application on your local machine.
